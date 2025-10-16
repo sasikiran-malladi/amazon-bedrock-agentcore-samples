@@ -1,12 +1,13 @@
 AWSTemplateFormatVersion: '2010-09-09'
-Description: 'CloudFormation template for X-Ray Transaction Search with proper resource dependencies'
+Description: CloudFormation template for X-Ray Transaction Search with proper
+  resource dependencies
 
 Resources:
   LogsResourcePolicy:
     Type: AWS::Logs::ResourcePolicy
     Properties:
       PolicyName: TransactionSearchAccessPolicy
-      PolicyDocument: !Sub >
+      PolicyDocument: !Sub |
         {
           "Version": "2012-10-17",
           "Statement": [
@@ -37,4 +38,4 @@ Resources:
     Type: AWS::XRay::TransactionSearchConfig
     DependsOn: LogsResourcePolicy
     Properties:
-      IndexingPercentage: 10
+      IndexingPercentage: 1
