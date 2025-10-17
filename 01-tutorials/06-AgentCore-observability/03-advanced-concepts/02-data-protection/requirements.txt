@@ -1,7 +1,7 @@
-aws-opentelemetry-distro~=0.12.1
-python-dotenv
 strands-agents[otel]
-ddgs
+strands-agents-tools
+uv
 boto3
-botocore
-json
+bedrock-agentcore<=0.1.5
+bedrock-agentcore-starter-toolkit==0.1.14
+aws-opentelemetry-distro~=0.12.1
