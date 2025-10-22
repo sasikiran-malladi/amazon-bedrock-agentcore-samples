@@ -43,5 +43,6 @@
 - Omar Elkharbotly
 - Chintan Patel
 - Shreyas Subramanian
+- David Kaleko
 - sasikiran-malladi
 - sunkavar

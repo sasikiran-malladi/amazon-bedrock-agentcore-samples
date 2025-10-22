@@ -2,6 +2,6 @@ strands-agents[otel]
 strands-agents-tools
 uv
 boto3
-bedrock-agentcore<=0.1.5
-bedrock-agentcore-starter-toolkit==0.1.14
+bedrock-agentcore
+bedrock-agentcore-starter-toolkit
 aws-opentelemetry-distro~=0.12.1
