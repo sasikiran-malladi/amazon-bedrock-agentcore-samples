@@ -60,13 +60,13 @@ A comprehensive implementation of the [Agent-to-Agent (A2A)](https://a2a-protoco
    - **Tavily API Key**: Get from [Tavily](https://tavily.com/)
    - **Google API Key**: Get from [Google AI Studio](https://aistudio.google.com/app/apikey)
 
+   > **Note**: Make sure your OpenAI account has credits if you are using `gpt-4o-2024-08-06`.
+
 6. **Supported Regions**: This solution is currently tested and supported in the following AWS regions:
 
    | Region Code   | Region Name          | Status      |
    |---------------|----------------------|-------------|
    | `us-west-2`   | US West (Oregon)     | ✅ Supported |
-
-   > **Note**: To deploy in other regions, you'll need to update the DynamoDB prefix list mappings in `cloudformation/vpc-stack.yaml`. See the [VPC Stack documentation](cloudformation/vpc-stack.yaml) for details.
 
 ## Quick Start Deployment
 
@@ -133,7 +133,7 @@ The [A2A Inspector](https://github.com/a2aproject/a2a-inspector) is a web-based 
    uv run web_search_openai_agents/scripts/get_m2m_token.py   
    ```
 
-3. Paste the URL & bearer token (`Bearer <Add Here>`) on A2A Inspector and add two headers `Authorization` and `X-Amzn-Bedrock-AgentCore-Runtime-Session-Id`. The value of `X-Amzn-Bedrock-AgentCore-Runtime-Session-Id` should be atleast 32 characters (`550e8400-e29b-41d4-a716-446655440000
+3. Paste the URL & bearer token (`Bearer <Add Here>`) on A2A Inspector and add three headers `Authorization`, `X-Amzn-Bedrock-AgentCore-Runtime-Session-Id`, and `X-Amzn-Bedrock-AgentCore-Runtime-Custom-Actorid`. The value of `X-Amzn-Bedrock-AgentCore-Runtime-Session-Id` should be atleast 32 characters (`550e8400-e29b-41d4-a716-446655440000
 `).
 
 ## Test Scripts

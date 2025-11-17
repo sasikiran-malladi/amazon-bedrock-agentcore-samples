@@ -1,5 +1,5 @@
 AWSTemplateFormatVersion: '2010-09-09'
-Description: "AgentCore Runtime"
+Description: "Web Search Agent Runtime - OpenAI-powered agent with Tavily search integration and semantic memory for incident research"
 
 Parameters:
   OpenAIKey:
@@ -294,6 +294,7 @@ Resources:
                 - docker push $ECR_REPOSITORY_URI:${IMAGE_TAG}
                 - echo "Build completed at $(date)"
                 - echo "Image tag pushed - ${IMAGE_TAG}"
+      # SourceVersion: refs/heads/a2a-sample
       TimeoutInMinutes: 30
       Tags:
         - Key: Name
@@ -365,11 +366,21 @@ Resources:
         ZipFile: |
           import json
           import logging
-          import boto3
           import os
+          import sys
+          import subprocess
+
+          # Upgrade boto3 to latest version at runtime
+          subprocess.check_call([sys.executable, "-m", "pip", "install", "--upgrade", "boto3", "-t", "/tmp"])
+          sys.path.insert(0, "/tmp")
+
+          import boto3
+          import botocore
 
           logger = logging.getLogger()
           logger.setLevel(logging.INFO)
+          logger.info(f"Using boto3 version: {boto3.__version__}")
+          logger.info(f"Using botocore version: {botocore.__version__}")
 
           def lambda_handler(event, context):
               try:
@@ -422,6 +433,7 @@ Resources:
                       roleArn=role_arn,
                       networkConfiguration=get_response['networkConfiguration'],
                       protocolConfiguration=get_response['protocolConfiguration'],
+                      requestHeaderConfiguration={"requestHeaderAllowlist": ["X-Amzn-Bedrock-AgentCore-Runtime-Custom-Actorid"]},
                       authorizerConfiguration=get_response['authorizerConfiguration'],
                       environmentVariables=get_response['environmentVariables'],
                   )
@@ -461,7 +473,6 @@ Resources:
   ECRImageEventRule:
     Type: AWS::Events::Rule
     Properties:
-      Name: !Sub '${AWS::StackName}-agent-ecr-push-rule'
       Description: 'Trigger Lambda when new ECR image is pushed'
       EventPattern:
         source:
@@ -571,7 +582,6 @@ Resources:
   CodeBuildTriggerFunction:
     Type: AWS::Lambda::Function
     Properties:
-      FunctionName: !Sub '${AWS::StackName}-agent-codebuild'
       Runtime: python3.13
       Handler: index.lambda_handler
       Role: !GetAtt CodeBuildTriggerLambdaRole.Arn
@@ -883,6 +893,9 @@ Resources:
         ContainerConfiguration:
           ContainerUri: !Sub '${AWS::AccountId}.dkr.ecr.${AWS::Region}.amazonaws.com/${AgentECRRepository}:build-1'
       ProtocolConfiguration: A2A
+      RequestHeaderConfiguration :
+        RequestHeaderAllowlist: 
+          - X-Amzn-Bedrock-AgentCore-Runtime-Custom-Actorid
       AuthorizerConfiguration:
         CustomJWTAuthorizer:
           DiscoveryUrl:
